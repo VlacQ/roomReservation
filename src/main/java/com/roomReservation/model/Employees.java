@@ -8,11 +8,13 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 @Entity
+@Table(name = "Employees")
 public class Employees {
     @Column(name = "first_name", nullable = false)
     @Length(max = 50)
