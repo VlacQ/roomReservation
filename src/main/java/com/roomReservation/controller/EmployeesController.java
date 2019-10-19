@@ -8,10 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
-import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -28,29 +29,31 @@ public class EmployeesController {
     private static final Logger logger = LoggerFactory.getLogger(EmployeesController.class);
 
     @RequestMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-    public Map<String, String> createEmployee(@RequestBody Employees employees, @RequestParam("passwd") String password) {
+    public Map<String, String> createEmployee(@Valid @RequestBody Employees employees, @RequestParam("passwd") String password) {
         logger.info("Called employees/create");
 
         if (checkPassword(password)){
             logger.info("Correct password");
         } else {
             logger.error("Error occurred while trying to create a new employee - incorrect password");
+            response.put("timestamp", String.valueOf(new Date()));
             response.put("status", "fail - incorrect password");
             return response;
         }
 
         try {
             employeesService.createEmployee(employees);
+            employees.setPassword(employees.securePassword(employees.getPassword()));
+            response.put("timestamp", String.valueOf(new Date()));
             response.put("status", "success - employee created");
 
         } catch (DataIntegrityViolationException dive) {
             logger.error("Error occurred while trying to create a new employee - login duplicate", dive);
-            response.put("status", "fail - login duplicate / missing data");
-        } catch (TransactionSystemException tse) {
-            logger.error("Error occurred while trying to create a new employee - missing data / too short password", tse);
-            response.put("status", "fail - missing data / too short password");
+            response.put("timestamp", String.valueOf(new Date()));
+            response.put("status", "fail - login duplicate");
         } catch (Exception e) {
             logger.error("Error occurred while trying to create a new employee ", e);
+            response.put("timestamp", String.valueOf(new Date()));
             response.put("status", "fail - unknown error");
         }
 
@@ -72,7 +75,6 @@ public class EmployeesController {
         try {
             employeesService.deleteEmployee(employeeLogin);
             response.put("status", "success");
-
         } catch (Exception e) {
             logger.error("Error occurred while trying to delete an employee ", e);
             response.put("status", "fail");

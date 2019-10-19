@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -18,30 +19,36 @@ import java.security.NoSuchAlgorithmException;
 public class Employees {
     @Column(name = "first_name", nullable = false)
     @Length(max = 50)
+    @NotEmpty(message = "first name cannot be empty")
+    @NotNull(message = "first name cannot be empty")
     private String firstName;
 
     @Column(name = "last_name", nullable = false)
-    @Length(max = 100)
+    @Length(max = 100, message = "last name ")
+    @NotEmpty(message = "last name cannot be empty")
+    @NotNull(message = "last name cannot be empty")
     private String lastName;
 
     @Id
     @Column(unique = true, nullable = false)
     @Length(max = 100)
-    @NotEmpty
+    @NotEmpty(message = "login cannot be empty")
+    @NotNull(message = "login cannot be empty")
     private String login;
 
     @Column(nullable = false)
-    @Length(max = 100, min = 6)
+    @Length(max = 100, min = 6, message = "password cannot have more than 100 characters")
+    @Length(min = 6, message = "password cannot have less than 6 characters")
     private String password;
 
     public Employees() {
     }
 
-    public Employees(String firstName, String lastName, String login, String password) {
+    public Employees(@Length(max = 50) String firstName, @Length(max = 100) String lastName, @Length(max = 100) @NotEmpty String login, @Length(max = 100, min = 6) String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.login = login;
-        this.password = securePassword(password);
+        this.password = password;
     }
 
     public String getFirstName() {
@@ -73,10 +80,10 @@ public class Employees {
     }
 
     public void setPassword(String password) {
-        this.password = securePassword(password);
+        this.password = password;
     }
 
-    private String securePassword(String password) {
+    public String securePassword(String password) {
         String generatedPassword = null;
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
