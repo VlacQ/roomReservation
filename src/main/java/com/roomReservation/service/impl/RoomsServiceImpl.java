@@ -37,6 +37,11 @@ public class RoomsServiceImpl implements RoomsService {
     }
 
     @Transactional
+    public Rooms getRoomByName(String roomName) {
+        return roomsDao.getRoomByName(roomName);
+    }
+
+    @Transactional
     public List<Rooms> getRooms() {
         return (List<Rooms>) roomsDao.getRooms();
     }

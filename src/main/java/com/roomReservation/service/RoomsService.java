@@ -14,5 +14,7 @@ public interface RoomsService {
 
     public void updateRoom(Rooms rooms);
 
+    public Rooms getRoomByName(String roomName);
+
     public List<Rooms> getRooms();
 }
