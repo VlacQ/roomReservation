@@ -5,14 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Employees")
@@ -30,7 +29,7 @@ public class Employees {
     private String lastName;
 
     @Id
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     @Length(max = 100)
     @NotEmpty(message = "login cannot be empty")
     @NotNull(message = "login cannot be empty")
@@ -48,7 +47,7 @@ public class Employees {
         this.firstName = firstName;
         this.lastName = lastName;
         this.login = login;
-        this.password = password;
+        this.password = securePassword(password);
     }
 
     public String getFirstName() {
@@ -80,7 +79,7 @@ public class Employees {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = securePassword(password);
     }
 
     public String securePassword(String password) {
