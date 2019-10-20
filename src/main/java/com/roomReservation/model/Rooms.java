@@ -8,6 +8,8 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Rooms")
@@ -30,6 +32,10 @@ public class Rooms {
 
     @Column(name = "phone_number")
     private String phoneNumber;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "room_name")
+    private List<Reservations> reservationsList = new ArrayList<>();
 
     public Rooms() {
     }
