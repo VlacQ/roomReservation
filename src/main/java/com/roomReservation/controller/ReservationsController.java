@@ -69,7 +69,7 @@ public class ReservationsController {
             return response.toString();
         }
 
-        return reservationsService.getReservationsList(reservations).toString();
+        return reservationsService.getReservationsRoom(reservations).toString();
     }
 
     @RequestMapping(value = "/reservationList", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
@@ -120,7 +120,16 @@ public class ReservationsController {
             return false;
         }
 
-        //TODO add checking if room is not booked
+        List<Reservations> list = reservationsService.getReservationsRoom(reservations);
+
+        for (Reservations r:list) {
+            if (!(r.getDateFrom().compareTo(reservations.getDateFrom()) < 0 && r.getDateTo().compareTo(reservations.getDateFrom()) <= 0
+            || r.getDateFrom().compareTo(reservations.getDateTo()) >= 0 && r.getDateTo().compareTo(reservations.getDateTo()) > 0)){
+                response.put("status", "fail - room has been booked already");
+                return false;
+            }
+
+        }
 
         return true;
     }
