@@ -21,7 +21,7 @@ public class EmployeesDao {
         entityManager.merge(employees);
     }
 
-    public Employees getEmployeeById(String login){
+    public Employees getEmployeeByLogin(String login){
         return entityManager.find(Employees.class, login);
     }
 
@@ -31,7 +31,7 @@ public class EmployeesDao {
     }
 
     public void deleteEmployee(String login){
-        Employees employees = getEmployeeById(login);
+        Employees employees = getEmployeeByLogin(login);
         if (employees != null)
             entityManager.remove(employees);
     }
