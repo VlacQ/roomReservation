@@ -30,6 +30,11 @@ public class EmployeesServiceImpl implements EmployeesService {
     }
 
     @Transactional
+    public Employees getEmployeeByLogin(String employeeLogin) {
+        return employeesDao.getEmployeeByLogin(employeeLogin);
+    }
+
+    @Transactional
     public void updateEmployee(Employees employees) {
         employeesDao.updateEmployee(employees);
     }
