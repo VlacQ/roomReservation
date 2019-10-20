@@ -1,14 +1,12 @@
 package com.roomReservation.dao;
 
 import com.roomReservation.model.Reservations;
-import com.roomReservation.model.Rooms;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.Collection;
-import java.util.List;
 
 @Repository
 public class ReservationsDao {

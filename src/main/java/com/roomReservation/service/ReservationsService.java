@@ -1,7 +1,6 @@
 package com.roomReservation.service;
 
 import com.roomReservation.model.Reservations;
-import com.roomReservation.model.Rooms;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,14 +25,10 @@ public class Reservations {
     private Set<Employees> employees = new HashSet<>();
 
     @Column(name = "date_from")
-    @Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date dateFrom;
+    private String dateFrom;
 
     @Column(name = "date_to")
-    @Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date dateTo;
+    private String dateTo;
 
     public Reservations() {
     }
@@ -59,19 +53,15 @@ public class Reservations {
         this.employees = employees;
     }
 
-    public Date getDateFrom() {
-        return dateFrom;
-    }
+    public String getDateFrom() { return dateFrom; }
 
-    public void setDateFrom(Date dateFrom) {
-        this.dateFrom = dateFrom;
-    }
+    public void setDateFrom(String dateFrom) { this.dateFrom = dateFrom; }
 
-    public Date getDateTo() {
+    public String getDateTo() {
         return dateTo;
     }
 
-    public void setDateTo(Date dateTo) {
+    public void setDateTo(String dateTo) {
         this.dateTo = dateTo;
     }
 

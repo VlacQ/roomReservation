@@ -1,10 +1,7 @@
 package com.roomReservation.service.impl;
 
-import com.roomReservation.dao.EmployeesDao;
 import com.roomReservation.dao.RoomsDao;
-import com.roomReservation.model.Employees;
 import com.roomReservation.model.Rooms;
-import com.roomReservation.service.EmployeesService;
 import com.roomReservation.service.RoomsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
