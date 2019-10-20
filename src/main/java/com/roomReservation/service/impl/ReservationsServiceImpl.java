@@ -27,4 +27,9 @@ public class ReservationsServiceImpl implements ReservationsService {
     public List<Reservations> getReservationsList(Reservations reservations) {
         return (List<Reservations>) reservationsDao.getReservationsList(reservations);
     }
+
+    @Transactional
+    public List<Reservations> getReservationsRoom(Reservations reservations) {
+        return (List<Reservations>) reservationsDao.getReservationsRoom(reservations);
+    }
 }

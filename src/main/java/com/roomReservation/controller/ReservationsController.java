@@ -61,30 +61,15 @@ public class ReservationsController {
     }
 
     @RequestMapping(value = "/room", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-    public Map<String, String> bookedRoom(@Valid @RequestBody Reservations reservations) {
+    public String bookedRoom(@Valid @RequestBody Reservations reservations) {
         logger.info("Called reservations/room");
 
         if (!checkRoomNameAndSeats(reservations)) {
             response.put("timestamp", String.valueOf(new Date()));
-            return response;
+            return response.toString();
         }
 
-        try {
-            reservationsService.createReservation(reservations);
-            response.put("status", "success - reservation created");
-            response.put("timestamp", String.valueOf(new Date()));
-
-        } catch (DataIntegrityViolationException dive) {
-            logger.error("Error occurred while trying to create a new room - login duplicate", dive);
-            response.put("timestamp", String.valueOf(new Date()));
-            response.put("status", "fail - login duplicate");
-        } catch (Exception e) {
-            logger.error("Error occurred while trying to create a new room ", e);
-            response.put("timestamp", String.valueOf(new Date()));
-            response.put("status", "fail - unknown error");
-        }
-
-        return response;
+        return reservationsService.getReservationsList(reservations).toString();
     }
 
     @RequestMapping(value = "/reservationList", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
@@ -123,7 +108,7 @@ public class ReservationsController {
                 return false;
             }
         } catch (NullPointerException npe){
-            response.put("status", "fail - roomName not found: " + reservations.getRooms().getRoomName());;
+            response.put("status", "fail - roomName not found");;
             return false;
         }
         return true;

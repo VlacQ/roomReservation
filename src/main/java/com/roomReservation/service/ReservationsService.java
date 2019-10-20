@@ -12,4 +12,6 @@ public interface ReservationsService {
     public void createReservation(Reservations reservations);
 
     public List<Reservations> getReservationsList(Reservations reservations);
+
+    public List<Reservations> getReservationsRoom(Reservations reservations);
 }
