@@ -60,7 +60,7 @@ public class EmployeesController {
         return response;
     }
 
-    @RequestMapping(value = "/delete/{employeeLogin}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/delete/{employeeLogin}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public Map<String, String> deleteEmployee(@PathVariable String employeeLogin, @RequestParam("passwd") String password) {
         logger.info("Called employees/delete");
 
@@ -86,7 +86,7 @@ public class EmployeesController {
         return response;
     }
 
-    @RequestMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public Map<String, String> updateEmployee(@RequestBody Employees employees, @RequestParam("passwd") String password) {
         logger.info("Called employees/update");
 
@@ -117,7 +117,7 @@ public class EmployeesController {
         return response;
     }
 
-    @RequestMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseBody
     public String getEmployeesList() {
         logger.info("employees/list");
