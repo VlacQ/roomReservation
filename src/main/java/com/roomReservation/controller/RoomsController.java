@@ -58,14 +58,14 @@ public class RoomsController {
         return response;
     }
 
-    @RequestMapping(value = "/delete/{roomName}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/delete/{roomName}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public Map<String, String> deleteEmployee(@PathVariable String roomName, @RequestParam("passwd") String password) {
         logger.info("Called rooms/delete");
 
         if (checkPassword(password)){
             logger.info("Correct password");
         } else {
-            logger.error("Error occurred while trying to create a new room - incorrect password");
+            logger.error("Error occurred while trying to delete a room - incorrect password");
             response.put("timestamp", String.valueOf(new Date()));
             response.put("status", "fail - incorrect password");
             return response;
@@ -76,7 +76,7 @@ public class RoomsController {
             response.put("timestamp", String.valueOf(new Date()));
             response.put("status", "success");
         } catch (Exception e) {
-            logger.error("Error occurred while trying to delete an room ", e);
+            logger.error("Error occurred while trying to delete a room ", e);
             response.put("timestamp", String.valueOf(new Date()));
             response.put("status", "fail");
         }
@@ -84,14 +84,14 @@ public class RoomsController {
         return response;
     }
 
-    @RequestMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public Map<String, String> updateEmployee(@RequestBody Rooms rooms, @RequestParam("passwd") String password) {
         logger.info("Called rooms/update");
 
         if (checkPassword(password)){
             logger.info("Correct password");
         } else {
-            logger.error("Error occurred while trying to create a new room - incorrect password");
+            logger.error("Error occurred while trying to update a room - incorrect password");
             response.put("timestamp", String.valueOf(new Date()));
             response.put("status", "fail - incorrect password");
             return response;
@@ -109,15 +109,15 @@ public class RoomsController {
             response.put("status", "success");
 
         } catch (Exception e) {
-            logger.error("Error occurred while trying to delete an room ", e);
+            logger.error("Error occurred while trying to update a room ", e);
             response.put("timestamp", String.valueOf(new Date()));
-            response.put("status", "fail");
+            response.put("status", "fail - unknown error");
         }
 
         return response;
     }
 
-    @RequestMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseBody
     public String getRoomsList() {
         logger.info("Called rooms/list");

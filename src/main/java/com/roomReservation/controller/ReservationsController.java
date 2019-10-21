@@ -50,11 +50,11 @@ public class ReservationsController {
             response.put("timestamp", String.valueOf(new Date()));
 
         } catch (DataIntegrityViolationException dive) {
-            logger.error("Error occurred while trying to create a new room - login duplicate", dive);
+            logger.error("Error occurred while trying to create a new reservation - login duplicate", dive);
             response.put("timestamp", String.valueOf(new Date()));
             response.put("status", "fail - login duplicate");
         } catch (Exception e) {
-            logger.error("Error occurred while trying to create a new room ", e);
+            logger.error("Error occurred while trying to create a new reservation ", e);
             response.put("timestamp", String.valueOf(new Date()));
             response.put("status", "fail - unknown error");
         }
@@ -67,6 +67,7 @@ public class ReservationsController {
         logger.info("Called reservations/room");
 
         if (!checkRoomNameAndSeats(reservations) && !checkDatesNull(reservations)) {
+            logger.error("Error occurred while trying to search reservations by a room");
             response.put("timestamp", String.valueOf(new Date()));
             return response.toString();
         }
@@ -79,6 +80,7 @@ public class ReservationsController {
         logger.info("Called reservations/employeeReservations");
 
         if (!checkLogin(reservations) || !checkDatesNull(reservations)) {
+            logger.error("Error occurred while trying to search reservations by an employee");
             response.put("timestamp", String.valueOf(new Date()));
             return response.toString();
         }
@@ -91,6 +93,7 @@ public class ReservationsController {
         logger.info("Called reservations/reservationList");
 
         if (!checkDatesNull(reservations)) {
+            logger.error("Error occurred while trying to get reservations");
             response.put("timestamp", String.valueOf(new Date()));
             return response.toString();
         }

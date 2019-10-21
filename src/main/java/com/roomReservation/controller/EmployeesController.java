@@ -67,7 +67,7 @@ public class EmployeesController {
         if (checkPassword(password)){
             logger.info("Correct password");
         } else {
-            logger.error("Error occurred while trying to create a new employee - incorrect password");
+            logger.error("Error occurred while trying to delete an employee - incorrect password");
             response.put("status", "fail - incorrect password");
             response.put("timestamp", String.valueOf(new Date()));
             return response;
@@ -93,7 +93,7 @@ public class EmployeesController {
         if (checkPassword(password)){
             logger.info("Correct password");
         } else {
-            logger.error("Error occurred while trying to create a new employee - incorrect password");
+            logger.error("Error occurred while trying to update an employee - incorrect password");
             response.put("status", "fail - incorrect password");
             response.put("timestamp", String.valueOf(new Date()));
             return response;
@@ -102,6 +102,7 @@ public class EmployeesController {
         try {
             Employees emp =  employeesService.getEmployeeByLogin(employees.getLogin());
             if (emp.getLogin() == null){
+                logger.error("Error occurred while trying to update an employee - login not found");
                 response.put("status", "fail - login not found");
                 response.put("timestamp", String.valueOf(new Date()));
                 return response;
@@ -109,7 +110,7 @@ public class EmployeesController {
             employeesService.updateEmployee(employees);
 
         } catch (Exception e) {
-            logger.error("Error occurred while trying to delete an employee ", e);
+            logger.error("Error occurred while trying to update an employee ", e);
             response.put("timestamp", String.valueOf(new Date()));
             response.put("status", "fail");
         }
