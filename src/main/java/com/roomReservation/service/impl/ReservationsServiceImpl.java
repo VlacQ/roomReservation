@@ -32,4 +32,9 @@ public class ReservationsServiceImpl implements ReservationsService {
     public List<Reservations> getReservationsRoom(Reservations reservations) {
         return (List<Reservations>) reservationsDao.getReservationsRoom(reservations);
     }
+
+    @Transactional
+    public List<Reservations> getReservationsEmployee(Reservations reservations) {
+        return (List<Reservations>) reservationsDao.getReservationsEmployee(reservations);
+    }
 }

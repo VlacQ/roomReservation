@@ -63,4 +63,28 @@ public class ReservationsDao {
 
         return (Collection<Reservations>) query.getResultList();
     }
+
+    public Collection<Reservations> getReservationsEmployee(Reservations reservations) {
+        Query query;
+        String login = reservations.getEmployees().iterator().next().getLogin();
+        if (reservations.getDateTo() == null && reservations.getDateFrom() == null) {
+            query = entityManager.createQuery("SELECT re FROM Reservations re join re.employees e where e.login = :login")
+                    .setParameter("login", login);
+        } else if (reservations.getDateTo() == null) {
+            query = entityManager.createQuery("SELECT re FROM Reservations re join re.employees e where re.dateFrom >= :dateFrom and e.login = :login")
+                    .setParameter("dateFrom", reservations.getDateFrom())
+                    .setParameter("login", login);
+        } else if (reservations.getDateFrom() == null) {
+            query = entityManager.createQuery("SELECT re FROM Reservations re join re.employees e where re.dateTo <= :dateTo and e.login = :login")
+                    .setParameter("dateTo", reservations.getDateTo())
+                    .setParameter("login", login);
+        } else {
+            query = entityManager.createQuery("SELECT re FROM Reservations re join re.employees e where re.dateFrom >= :dateFrom and re.dateTo <= :dateTo and e.login = :login")
+                    .setParameter("dateTo", reservations.getDateTo())
+                    .setParameter("dateFrom", reservations.getDateFrom())
+                    .setParameter("login", login);
+        }
+
+        return (Collection<Reservations>) query.getResultList();
+    }
 }

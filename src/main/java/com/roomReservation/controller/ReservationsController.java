@@ -39,7 +39,7 @@ public class ReservationsController {
     public Map<String, String> createReservation(@Valid @RequestBody Reservations reservations) {
         logger.info("Called reservations/create");
 
-        if (!checkLoginsAndPasswords(reservations) || !checkRoomNameAndSeats(reservations) || !checkDates(reservations)) {
+        if (!checkLoginsAndPasswords(reservations) || !checkRoomNameAndSeats(reservations) || !checkDatesCreate(reservations)) {
             response.put("timestamp", String.valueOf(new Date()));
             return response;
         }
@@ -66,7 +66,7 @@ public class ReservationsController {
     public String bookedRoom(@Valid @RequestBody Reservations reservations) {
         logger.info("Called reservations/room");
 
-        if (!checkRoomNameAndSeats(reservations)) {
+        if (!checkRoomNameAndSeats(reservations) && !checkDatesNull(reservations)) {
             response.put("timestamp", String.valueOf(new Date()));
             return response.toString();
         }
@@ -74,9 +74,26 @@ public class ReservationsController {
         return reservationsService.getReservationsRoom(reservations).toString();
     }
 
+    @RequestMapping(value = "/employeeReservations", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    public String employeeBookedRooms(@Valid @RequestBody Reservations reservations) {
+        logger.info("Called reservations/employeeReservations");
+
+        if (!checkLogin(reservations) || !checkDatesNull(reservations)) {
+            response.put("timestamp", String.valueOf(new Date()));
+            return response.toString();
+        }
+
+        return reservationsService.getReservationsEmployee(reservations).toString();
+    }
+
     @RequestMapping(value = "/reservationList", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public String bookedRooms(@RequestBody Reservations reservations) {
         logger.info("Called reservations/reservationList");
+
+        if (!checkDatesNull(reservations)) {
+            response.put("timestamp", String.valueOf(new Date()));
+            return response.toString();
+        }
 
         return reservationsService.getReservationsList(reservations).toString();
     }
@@ -100,6 +117,24 @@ public class ReservationsController {
         return true;
     }
 
+    private boolean checkLogin(Reservations reservations) {
+        if (reservations.getEmployees().size() > 1){
+            response.put("status", "fail - more than one login found");
+            return false;
+        }
+
+        for (Employees employees : reservations.getEmployees()) {
+            Employees emp = null;
+            try {
+                emp = employeesService.getEmployeeByLogin(employees.getLogin());
+            } catch (Exception e) {
+                response.put("status", "fail - login not found: " + employees.getLogin());
+                return false;
+            }
+        }
+        return true;
+    }
+
     private boolean checkRoomNameAndSeats(Reservations reservations) {
         Rooms room;
 
@@ -113,6 +148,24 @@ public class ReservationsController {
             response.put("status", "fail - roomName not found");;
             return false;
         }
+        return true;
+    }
+
+    private boolean checkDatesCreate(Reservations reservations) {
+        if (!checkDates(reservations)){
+            return false;
+        }
+
+        List<Reservations> list = reservationsService.getReservationsRoom(reservations);
+
+        for (Reservations r:list) {
+            if (!(r.getDateFrom().compareTo(reservations.getDateFrom()) < 0 && r.getDateTo().compareTo(reservations.getDateFrom()) <= 0
+            || r.getDateFrom().compareTo(reservations.getDateTo()) >= 0 && r.getDateTo().compareTo(reservations.getDateTo()) > 0)){
+                response.put("status", "fail - room has been booked already");
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -131,16 +184,30 @@ public class ReservationsController {
             return false;
         }
 
-        List<Reservations> list = reservationsService.getReservationsRoom(reservations);
+        return true;
+    }
 
-        for (Reservations r:list) {
-            if (!(r.getDateFrom().compareTo(reservations.getDateFrom()) < 0 && r.getDateTo().compareTo(reservations.getDateFrom()) <= 0
-            || r.getDateFrom().compareTo(reservations.getDateTo()) >= 0 && r.getDateTo().compareTo(reservations.getDateTo()) > 0)){
-                response.put("status", "fail - room has been booked already");
+    private boolean checkDatesNull(Reservations reservations) {
+        try {
+            if (!isDateValid(reservations.getDateFrom())){
+                response.put("status", "fail - incorrect dateFrom format");
                 return false;
             }
+        } catch (NullPointerException npe){ }
 
-        }
+        try {
+            if (!isDateValid(reservations.getDateTo())){
+                response.put("status", "fail - incorrect dateTo format");
+                return false;
+            }
+        } catch (NullPointerException npe) { }
+
+        try {
+            if (reservations.getDateFrom().compareTo(reservations.getDateTo()) >= 0){
+                response.put("status", "fail - incorrect date reservation - dateFrom is greater or equals dateTo");
+                return false;
+            }
+        } catch (NullPointerException npe) { }
 
         return true;
     }

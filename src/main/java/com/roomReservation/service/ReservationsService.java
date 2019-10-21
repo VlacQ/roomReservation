@@ -13,4 +13,6 @@ public interface ReservationsService {
     public List<Reservations> getReservationsList(Reservations reservations);
 
     public List<Reservations> getReservationsRoom(Reservations reservations);
+
+    public List<Reservations> getReservationsEmployee(Reservations reservations);
 }
