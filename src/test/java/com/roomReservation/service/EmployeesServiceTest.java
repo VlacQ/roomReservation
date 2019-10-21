@@ -89,4 +89,36 @@ public class EmployeesServiceTest extends AbstractTest {
         }
         logger.info("list size: " + list.size());
     }
+
+    @Test
+    public void testUpdateEmptyData(){
+        List<Employees> list = employeesService.getEmployees();
+        String password = list.get(0).getPassword();
+        employeesService.updateEmployee(new Employees("", "", "jsmith", ""));
+
+        list = employeesService.getEmployees();
+
+        Assert.assertNotNull("failure - expected not null", list);
+        Assert.assertEquals("failure - different firstName", "John", list.get(0).getFirstName());
+        Assert.assertEquals("failure - different lastName", "Smith", list.get(0).getLastName());
+        Assert.assertEquals("failure - different login", "jsmith", list.get(0).getLogin());
+        Assert.assertEquals("failure - different password", password, list.get(0).getPassword());
+    }
+
+    @Test
+    public void testUpdateNullData(){
+        List<Employees> list = employeesService.getEmployees();
+        String password = list.get(0).getPassword();
+        Employees emp = new Employees();
+        emp.setLogin("jsmith");
+        employeesService.updateEmployee(emp);
+
+        list = employeesService.getEmployees();
+
+        Assert.assertNotNull("failure - expected not null", list);
+        Assert.assertEquals("failure - different firstName", "John", list.get(0).getFirstName());
+        Assert.assertEquals("failure - different lastName", "Smith", list.get(0).getLastName());
+        Assert.assertEquals("failure - different login", "jsmith", list.get(0).getLogin());
+        Assert.assertEquals("failure - different password", password, list.get(0).getPassword());
+    }
 }

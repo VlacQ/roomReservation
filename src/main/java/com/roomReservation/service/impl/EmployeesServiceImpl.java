@@ -36,7 +36,16 @@ public class EmployeesServiceImpl implements EmployeesService {
 
     @Transactional
     public void updateEmployee(Employees employees) {
-        employeesDao.updateEmployee(employees);
+        Employees emp = getEmployeeByLogin(employees.getLogin());
+        if (employees.getFirstName() != null && !employees.getFirstName().equals("")){
+            emp.setFirstName(employees.getFirstName());
+        }
+        if (employees.getLastName() != null && !employees.getLastName().equals("")){
+            emp.setLastName(employees.getLastName());
+        }
+        if (employees.getPassword() != null && !employees.getPassword().equals(emp.securePassword(""))){
+            emp.setPassword(employees.getPassword());
+        }
     }
 
     @Transactional
