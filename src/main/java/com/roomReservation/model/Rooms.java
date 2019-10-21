@@ -24,11 +24,11 @@ public class Rooms {
     private String locationDescription;
 
     @Column(name = "number_of_seats", nullable = false)
-    private int numberOfSeats;
+    private Integer numberOfSeats;
 
     @Column
     @Enumerated(EnumType.STRING)
-    private Projector projector = Projector.NO;
+    private Projector projector;
 
     @Column(name = "phone_number")
     private String phoneNumber;
@@ -64,7 +64,7 @@ public class Rooms {
         this.locationDescription = locationDescription;
     }
 
-    public int getNumberOfSeats() {
+    public Integer getNumberOfSeats() {
         return numberOfSeats;
     }
 

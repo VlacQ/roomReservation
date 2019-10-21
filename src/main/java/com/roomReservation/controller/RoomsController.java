@@ -98,6 +98,12 @@ public class RoomsController {
         }
 
         try {
+            Rooms r =  roomsService.getRoomByName(rooms.getRoomName());
+            if (r.getRoomName() == null){
+                response.put("status", "fail - login not found");
+                response.put("timestamp", String.valueOf(new Date()));
+                return response;
+            }
             roomsService.updateRoom(rooms);
             response.put("timestamp", String.valueOf(new Date()));
             response.put("status", "success");

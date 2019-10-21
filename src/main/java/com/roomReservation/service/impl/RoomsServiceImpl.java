@@ -1,6 +1,7 @@
 package com.roomReservation.service.impl;
 
 import com.roomReservation.dao.RoomsDao;
+import com.roomReservation.enumerate.Projector;
 import com.roomReservation.model.Rooms;
 import com.roomReservation.service.RoomsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class RoomsServiceImpl implements RoomsService {
 
     @Transactional
     public void createRoom(Rooms rooms) {
+        if (rooms.getProjector() == null){
+            rooms.setProjector(Projector.NO);
+        }
         roomsDao.createRoom(rooms);
     }
 
@@ -30,7 +34,19 @@ public class RoomsServiceImpl implements RoomsService {
 
     @Transactional
     public void updateRoom(Rooms rooms) {
-        roomsDao.updateRoom(rooms);
+        Rooms r = getRoomByName(rooms.getRoomName());
+        if (rooms.getLocationDescription() != null && !rooms.getLocationDescription().equals("")){
+            r.setLocationDescription(rooms.getLocationDescription());
+        }
+        if (rooms.getNumberOfSeats() != null && !rooms.getNumberOfSeats().toString().equals("")){
+            r.setNumberOfSeats(rooms.getNumberOfSeats());
+        }
+        if (rooms.getProjector() != null && !rooms.getProjector().toString().equals("")){
+            r.setProjector(rooms.getProjector());
+        }
+        if (rooms.getPhoneNumber() != null && !rooms.getPhoneNumber().equals("")){
+            r.setPhoneNumber(rooms.getPhoneNumber());
+        }
     }
 
     @Transactional
