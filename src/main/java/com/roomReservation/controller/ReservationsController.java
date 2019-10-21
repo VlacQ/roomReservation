@@ -15,6 +15,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
@@ -114,6 +117,15 @@ public class ReservationsController {
     }
 
     private boolean checkDates(Reservations reservations) {
+        if (!isDateValid(reservations.getDateFrom())){
+            response.put("status", "fail - incorrect dateFrom format");
+            return false;
+        }
+        if (!isDateValid(reservations.getDateTo())){
+            response.put("status", "fail - incorrect dateTo format");
+            return false;
+        }
+
         if (reservations.getDateFrom().compareTo(reservations.getDateTo()) >= 0){
             response.put("status", "fail - incorrect date reservation - dateFrom is greater or equals dateTo");
             return false;
@@ -131,5 +143,16 @@ public class ReservationsController {
         }
 
         return true;
+    }
+
+    private boolean isDateValid(String date){
+        try {
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            df.setLenient(false);
+            df.parse(date);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
     }
 }
